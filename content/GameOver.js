@@ -11,7 +11,12 @@ const GameOver = (props) => {
       <TitleText>The game is over!</TitleText>
       <Image
         style={styles.image}
-        source={require('../assets/images/success.png')}
+        fadeDuration={1000}
+        // source={require('../assets/images/success.png')}
+        source={{
+          uri:
+            'https://upload.wikimedia.org/wikipedia/commons/8/88/Summit_of_the_Matterhorn.jpg',
+        }}
         resizeMode='cover'
       />
       <BodyText>Number of rounds: {rounds}</BodyText>
@@ -37,7 +42,7 @@ const styles = StyleSheet.create({
     borderRadius: 200,
     borderWidth: 3,
     borderColor: '#000',
-    marginVertical: 30
+    marginVertical: 30,
   },
 });
 
