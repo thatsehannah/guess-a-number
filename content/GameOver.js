@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Button, Image } from 'react-native';
 import colors from '../constants/colors';
 import BodyText from '../components/BodyText';
 import TitleText from '../components/TitleText';
+import CustomButton from '../components/CustomButton';
 import font from '../constants/fontFamilies';
 
 const GameOver = (props) => {
@@ -28,11 +29,7 @@ const GameOver = (props) => {
         </BodyText>
       </View>
 
-      <Button
-        title='START OVER'
-        color={colors.secondary}
-        onPress={newGame}
-      ></Button>
+      <CustomButton onPress={newGame}>START OVER</CustomButton>
     </View>
   );
 };
@@ -57,11 +54,11 @@ const styles = StyleSheet.create({
   },
   resultsText: {
     textAlign: 'center',
-    fontSize: 20
+    fontSize: 20,
   },
   resultContainer: {
     marginHorizontal: 30,
-    marginVertical: 15
+    marginVertical: 15,
   },
 });
 
