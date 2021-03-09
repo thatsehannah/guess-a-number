@@ -117,8 +117,9 @@ const styles = StyleSheet.create({
     fontFamily: fonts.montserratBold,
   },
   inputContainer: {
-    width: 300,
-    maxWidth: '80%',
+    width: '80%',
+    maxWidth: '95%',
+    minWidth: 250,
     alignItems: 'center',
   },
   buttonsContainer: {
