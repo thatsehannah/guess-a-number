@@ -1,11 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  ScrollView,
+  FlatList,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import NumberContainer from '../components/NumberContainer';
 import Card from '../components/Card';
 import TitleText from '../components/TitleText';
 import CustomButton from '../components/CustomButton';
+import BodyText from '../components/BodyText';
 
 const generateRandomBetween = (min, max, exclude) => {
   min = Math.ceil(min);
@@ -19,10 +27,10 @@ const generateRandomBetween = (min, max, exclude) => {
 };
 
 const Game = (props) => {
-  const [currentGuess, setCurrentGuess] = useState(
-    generateRandomBetween(1, 100, props.chosenNumber)
-  );
-  const [rounds, setRounds] = useState(0);
+  const initialGuess = generateRandomBetween(1, 100, props.chosenNumber);
+  const [currentGuess, setCurrentGuess] = useState(initialGuess);
+  const [pastGuesses, setPastGuesses] = useState([initialGuess.toString()]);
+  var count = 0;
 
   const currentMin = useRef(1);
   const currentMax = useRef(100);
@@ -31,7 +39,7 @@ const Game = (props) => {
 
   useEffect(() => {
     if (currentGuess === props.userChoice) {
-      props.onGameOver(rounds);
+      props.onGameOver(pastGuesses.length);
     }
   }, [currentGuess, userChoice, onGameOver]);
 
@@ -48,7 +56,7 @@ const Game = (props) => {
     if (direction === 'lower') {
       currentMax.current = currentGuess;
     } else {
-      currentMin.current = currentGuess;
+      currentMin.current = currentGuess + 1;
     }
 
     const nextNumber = generateRandomBetween(
@@ -57,7 +65,11 @@ const Game = (props) => {
       currentGuess
     );
     setCurrentGuess(nextNumber);
-    setRounds((currentRounds) => currentRounds + 1);
+    setPastGuesses((currentGuesses) => [
+      nextNumber.toString(),
+      ...currentGuesses,
+    ]);
+    count++;
   };
 
   return (
@@ -72,6 +84,21 @@ const Game = (props) => {
           <Ionicons name='md-add' size={24} color='#fff' />
         </CustomButton>
       </Card>
+      <View style={styles.listContainer}>
+        <FlatList
+          contentContainerStyle={styles.list}
+          data={pastGuesses}
+          keyExtractor={(item) => item}
+          renderItem={(itemData) => {
+            return (
+              <View style={styles.listItem}>
+                <BodyText>#{pastGuesses.length - itemData.index}</BodyText>
+                <BodyText>{itemData.item}</BodyText>
+              </View>
+            );
+          }}
+        ></FlatList>
+      </View>
     </View>
   );
 };
@@ -87,6 +114,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 20,
     width: '95%',
+  },
+  listContainer: {
+    flex: 1,
+    width: '80%',
+  },
+  list: {
+    flexGrow: 1,
+    justifyContent: 'flex-end',
+  },
+  listItem: {
+    borderColor: '#ccc',
+    borderWidth: 1,
+    padding: 15,
+    marginVertical: 10,
+    backgroundColor: '#fff',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
   },
 });
 
