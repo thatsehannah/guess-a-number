@@ -45,7 +45,7 @@ const Game = (props) => {
   const newGuessHandler = (direction) => {
     if (
       (direction === 'lower' && currentGuess < userChoice) || //my number is 55, computer guesses 50
-      (direction === 'right' && currentGuess > userChoice) //my number is 55, computer guesses 60
+      (direction === 'greater' && currentGuess > userChoice) //my number is 55, computer guesses 60
     ) {
       Alert.alert("Don't lie", 'You know that this is wrong...', [
         { text: 'Sorry', style: 'cancel' },
