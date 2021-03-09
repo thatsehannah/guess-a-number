@@ -9,10 +9,13 @@ import {
   Alert,
 } from 'react-native';
 import colors from '../constants/colors';
+import fonts from '../constants/fontFamilies';
 
 import Card from '../components/Card';
 import Input from '../components/Input';
 import NumberContainer from '../components/NumberContainer';
+import BodyText from '../components/BodyText';
+import TitleText from '../components/TitleText';
 
 const StartGame = (props) => {
   const [enteredValue, setEnteredValue] = useState('');
@@ -49,7 +52,7 @@ const StartGame = (props) => {
   if (confirmed) {
     confirmedOutput = (
       <Card style={styles.summaryContainer}>
-        <Text>You selected</Text>
+        <BodyText>You selected</BodyText>
         <NumberContainer> {selectedNumber} </NumberContainer>
         <Button
           title='START GAME'
@@ -66,9 +69,9 @@ const StartGame = (props) => {
       }}
     >
       <View style={styles.screen}>
-        <Text style={styles.title}>Start A New Game</Text>
+        <TitleText style={styles.title}>Start A New Game</TitleText>
         <Card style={styles.inputContainer}>
-          <Text>Select A Number</Text>
+          <BodyText>Select A Number</BodyText>
           <Input
             value={enteredValue}
             onChangeText={numberInputHandler}
@@ -111,7 +114,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     marginVertical: 10,
-    fontFamily: 'montserrat',
+    fontFamily: fonts.montserratBold,
   },
   inputContainer: {
     width: 300,
@@ -134,6 +137,9 @@ const styles = StyleSheet.create({
   summaryContainer: {
     marginTop: 20,
     alignItems: 'center',
+  },
+  text: {
+    fontFamily: fonts.montserratReg,
   },
 });
 
