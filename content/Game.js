@@ -1,12 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Alert,
-  ScrollView,
-  FlatList,
-} from 'react-native';
+import { View, StyleSheet, Alert, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import NumberContainer from '../components/NumberContainer';
@@ -14,6 +7,7 @@ import Card from '../components/Card';
 import TitleText from '../components/TitleText';
 import CustomButton from '../components/CustomButton';
 import GuessesContainer from '../components/GuessesContainer';
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 const generateRandomBetween = (min, max, exclude) => {
   min = Math.ceil(min);
@@ -26,15 +20,31 @@ const generateRandomBetween = (min, max, exclude) => {
   }
 };
 
+ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+
 const Game = (props) => {
   const initialGuess = generateRandomBetween(1, 100, props.chosenNumber);
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
   const [pastGuesses, setPastGuesses] = useState([initialGuess.toString()]);
+  const [detectedDeviceHeight, setDetectedDeviceHeight] = useState(
+    Dimensions.get('window').height
+  );
 
   const currentMin = useRef(1);
   const currentMax = useRef(100);
 
   const { userChoice, onGameOver } = props;
+
+  useEffect(() => {
+    const updateLayout = () => {
+      setDetectedDeviceHeight(Dimensions.get('window').height);
+    };
+    Dimensions.addEventListener('change', updateLayout);
+
+    return () => {
+      Dimensions.removeEventListener('change', updateLayout);
+    };
+  });
 
   useEffect(() => {
     if (currentGuess === props.userChoice) {
@@ -70,6 +80,25 @@ const Game = (props) => {
     ]);
   };
 
+  if (detectedDeviceHeight < 500) {
+    return (
+      <View style={styles.screen}>
+        <TitleText>Opponent's Guess</TitleText>
+        <View style={styles.controls}>
+          <CustomButton onPress={() => newGuessHandler('lower')}>
+            <Ionicons name='md-remove' size={24} color='#fff' />
+          </CustomButton>
+          <NumberContainer>{currentGuess}</NumberContainer>
+          <CustomButton onPress={() => newGuessHandler('greater')}>
+            <Ionicons name='md-add' size={24} color='#fff' />
+          </CustomButton>
+        </View>
+
+        <GuessesContainer guesses={pastGuesses} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.screen}>
       <TitleText>Opponent's Guess</TitleText>
@@ -96,8 +125,14 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20,
+    marginTop: Dimensions.get('window').height > 600 ? 20 : 10,
     width: '95%',
+  },
+  controls: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    width: '80%',
   },
 });
 
